@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'ru.vyarus.quality' version '2.2.0'
+    id 'io.qameta.allure' version '2.3'
+}
+
+group 'io.github.sskorol'
+version '1.0.0'
+description 'Test Data Supplier example'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+configurations {
+    agent
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    agent "org.aspectj:aspectjweaver:1.8.10"
+    compile('org.assertj:assertj-core:3.6.2',
+            'io.github.sskorol:test-data-supplier:0.6.0',
+            'org.jooq:joor:0.9.6',
+            'io.qameta.allure:allure-testng:2.0-BETA11',
+            'org.slf4j:slf4j-simple:1.7.25',
+            'org.projectlombok:lombok:1.16.16'
+    )
+}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
+}
+
+task copyConfig(type: Copy) {
+    from 'src/test/resources/config'
+    into 'build/allure-results'
+}
+
+task copyHistory(type: Copy) {
+    from 'src/test/resources/history'
+    into 'build/allure-results/history'
+}
+
+test.doFirst {
+    jvmArgs "-javaagent:${configurations.agent.singleFile}"
+}
+
+test {
+    useTestNG() {
+        listeners << 'io.github.sskorol.listeners.BaseListener'
+        listeners << 'io.github.sskorol.dataprovider.DataProviderTransformer'
+        suites 'src/test/resources/suites/parent.xml'
+    }
+
+    systemProperty 'allure.model.indentOutput', true
+    systemProperty 'allure.results.directory', 'build/allure-results'
+    systemProperty 'allure.link.issue.pattern', 'https://github.com/sskorol/test-data-supplier-gradle-example/issues/{}'
+    systemProperty 'allure.link.tms.pattern', 'https://github.com/sskorol/test-data-supplier-gradle-example/issues/{}'
+}
+
+test.dependsOn copyConfig, copyHistory
+
+allure {
+    autoconfigure = true
+    version = '2.2.1'
+
+    useTestNG {
+        version = '2.0-BETA11'
+    }
+}
