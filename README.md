@@ -1,4 +1,4 @@
-#### Test Data Supplier example
+### Test Data Supplier Gradle Example
 
 A basic example, which demonstrates [test-data-supplier](https://github.com/sskorol/test-data-supplier) library usage.
 
