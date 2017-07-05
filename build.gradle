@@ -22,7 +22,7 @@ repositories {
 dependencies {
     agent "org.aspectj:aspectjweaver:1.8.10"
     compile('org.assertj:assertj-core:3.6.2',
-            'io.github.sskorol:test-data-supplier:0.6.0',
+            'io.github.sskorol:test-data-supplier:0.7.0',
             'org.jooq:joor:0.9.6',
             'io.qameta.allure:allure-testng:2.0-BETA11',
             'org.slf4j:slf4j-simple:1.7.25',
