@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'ru.vyarus.quality' version '2.4.0'
-    id 'io.qameta.allure' version '2.4'
+    id 'io.qameta.allure' version '2.5'
 }
 
 group 'io.github.sskorol'
@@ -22,9 +22,9 @@ repositories {
 dependencies {
     agent "org.aspectj:aspectjweaver:1.8.10"
     compile('org.assertj:assertj-core:3.8.0',
-            'io.github.sskorol:test-data-supplier:1.2.5',
+            'io.github.sskorol:test-data-supplier:1.4.0',
             'org.jooq:joor:0.9.6',
-            'io.qameta.allure:allure-testng:2.0-BETA19',
+            'io.qameta.allure:allure-testng:2.0-BETA21',
             'org.slf4j:slf4j-simple:1.7.25',
             'org.projectlombok:lombok:1.16.18'
     )
@@ -33,7 +33,7 @@ dependencies {
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3'
+    gradleVersion = '4.3.1'
 }
 
 task copyConfig(type: Copy) {
@@ -67,10 +67,5 @@ test.dependsOn copyConfig, copyHistory
 
 allure {
     autoconfigure = true
-    aspectjweaver = true
     version = '2.4.1'
-
-    useTestNG {
-        version = '2.0-BETA14'
-    }
 }
