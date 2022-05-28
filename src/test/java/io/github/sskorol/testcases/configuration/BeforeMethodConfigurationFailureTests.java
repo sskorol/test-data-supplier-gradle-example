@@ -17,8 +17,9 @@ public class BeforeMethodConfigurationFailureTests {
     @Test
     @Severity(SeverityLevel.TRIVIAL)
     public void shouldNotBeExecutedDueToMethodConfigurationFailure() {
-        assertThat("Actual value")
-                .as("Dummy string")
-                .isEqualTo("Actual value");
+        var actual = "Actual value";
+        assertThat(actual)
+            .as("Dummy string")
+            .isEqualTo(actual);
     }
 }

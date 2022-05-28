@@ -1,9 +1,10 @@
 ### Test Data Supplier Gradle Example
 
-A basic example, which demonstrates [test-data-supplier](https://github.com/sskorol/test-data-supplier) library usage.
+A basic example which demonstrates [test-data-supplier](https://github.com/sskorol/test-data-supplier) library usage.
 
-Based on [allure2-testng-report](https://github.com/sskorol/allure2-testng-report) project.
-
-You can find **DataSupplier** samples in the following class: **io.github.sskorol.testcases.common.CommonTests**.
-
-For report generation and publishing see [allure-gradle](https://github.com/allure-framework/allure-gradle) plugin commands.
+```shell
+git clone https://github.com/sskorol/test-data-supplier-gradle-example.git && cd test-data-supplier-gradle-example
+./gradlew clean test
+./gradlew downloadAllure
+./gradlew allureServe
+```

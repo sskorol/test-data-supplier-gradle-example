@@ -11,19 +11,19 @@ public class HomePage implements Page {
     @Step("Display balance")
     public HomePage displayBalance() {
         addStreamAttachmentAsync("Archive", "application/gzip", () ->
-                getSystemResourceAsStream("attachments/archive.gz"));
+            getSystemResourceAsStream("attachments/archive.gz"));
         addStreamAttachmentAsync("Config", "application/xml", () ->
-                getSystemResourceAsStream("attachments/config.xml"));
+            getSystemResourceAsStream("attachments/config.xml"));
         addStreamAttachmentAsync("Data", "application/json", () ->
-                getSystemResourceAsStream("attachments/data.json"));
+            getSystemResourceAsStream("attachments/data.json"));
         addStreamAttachmentAsync("Links", "text/uri-list", () ->
-                getSystemResourceAsStream("attachments/links.uri"));
+            getSystemResourceAsStream("attachments/links.uri"));
         addStreamAttachmentAsync("Log", "text/plain", () ->
-                getSystemResourceAsStream("attachments/log.txt"));
+            getSystemResourceAsStream("attachments/log.txt"));
         addStreamAttachmentAsync("Table", "text/csv", () ->
-                getSystemResourceAsStream("attachments/table.csv"));
+            getSystemResourceAsStream("attachments/table.csv"));
         addStreamAttachmentAsync("Video", "video/webm", () ->
-                getSystemResourceAsStream("attachments/video.webm"));
+            getSystemResourceAsStream("attachments/video.webm"));
         return this;
     }
 }

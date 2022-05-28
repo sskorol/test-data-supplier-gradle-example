@@ -23,7 +23,7 @@ public class BaseListener implements IInvokedMethodListener {
 
             if (!testResult.isSuccess()) {
                 addStreamAttachmentAsync("Failure screenshot", "image/png", () ->
-                        getSystemResourceAsStream("attachments/screenshot.png"));
+                    getSystemResourceAsStream("attachments/screenshot.png"));
             }
         }
     }

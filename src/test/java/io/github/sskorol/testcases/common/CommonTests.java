@@ -1,8 +1,8 @@
 package io.github.sskorol.testcases.common;
 
-import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.model.User;
 import io.github.sskorol.pages.LoginPage;
+import io.github.sskorol.core.DataSupplier;
 import io.qameta.allure.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static io.github.sskorol.core.PageFactory.open;
+import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommonTests {
@@ -25,12 +25,23 @@ public class CommonTests {
         return new User("dummyUsername", "dummyPassword");
     }
 
+    @DataSupplier(propagateTestFailure = true)
+    public User failingData() {
+        throw new IllegalStateException("Should mark test as failed");
+    }
+
+    @DataSupplier
+    public User skippingData() {
+        throw new IllegalStateException("Should mark test as skipped");
+    }
+
     @DataSupplier
     public Stream<User> getStreamData() {
-        return Stream.of(
+        return Stream
+            .of(
                 new User("dummyUsername2", "dummyPassword2"),
                 new User("dummyUsername1", "dummyPassword1"))
-                     .sorted(comparing(User::getUsername));
+            .sorted(comparing(User::getUsername));
     }
 
     @DataSupplier(name = "collectionData")
@@ -40,17 +51,19 @@ public class CommonTests {
 
     @DataSupplier(transpose = true)
     public String[] getArrayData(final Method method) {
-        return Stream.of(method.getName(), "badPassword1", "badPassword2").toArray(String[]::new);
+        return Stream
+            .of(method.getName(), "badPassword1", "badPassword2")
+            .toArray(String[]::new);
     }
 
     @BeforeMethod
     public void prepareEnvironment(final Method method) {
-        retrieveData(method);
+        retrieveData(method.getName());
     }
 
     @AfterMethod
     public void cleanUpEnvironment(final Method method) {
-        cleanUpData(method);
+        cleanUpData(method.getName());
     }
 
     @Issue("21")
@@ -62,7 +75,7 @@ public class CommonTests {
     @Test(dataProvider = "getData")
     public void loginWithRegisteredUser(final User user) {
         open(LoginPage.class)
-                .loginWith(user);
+            .loginWith(user);
     }
 
     @Test
@@ -70,7 +83,9 @@ public class CommonTests {
     @Owner("baev")
     @Severity(SeverityLevel.BLOCKER)
     public void shouldFailOnAssertion() {
-        assertThat(true).as("Dummy status").isFalse();
+        assertThat(true)
+            .as("Dummy status")
+            .isFalse();
     }
 
     @Test
@@ -87,8 +102,8 @@ public class CommonTests {
     @Test(dataProvider = "collectionData")
     public void shouldFailOnSubStep(final String username) {
         open(LoginPage.class)
-                .typeUsername(username)
-                .cancelPopup();
+            .typeUsername(username)
+            .cancelPopup();
     }
 
     @Flaky
@@ -98,11 +113,11 @@ public class CommonTests {
     @Test(dataProvider = "getArrayData")
     public void shouldFailOnAssertionSubStep(final String... passwords) {
         assertThat(passwords[0])
-                .isEqualTo("shouldFailOnAssertionSubStep");
+            .isEqualTo("shouldFailOnAssertionSubStep");
 
         open(LoginPage.class)
-                .typePassword(Stream.of(passwords).collect(joining(",")))
-                .isPopupDisplayed();
+            .typePassword(join(",", passwords))
+            .isPopupDisplayed();
     }
 
     @Feature("Payments")
@@ -113,17 +128,27 @@ public class CommonTests {
     @Test(dataProvider = "getStreamData")
     public void shouldDisplayUserBalance(final User user) {
         open(LoginPage.class)
-                .loginWith(user)
-                .displayBalance();
+            .loginWith(user)
+            .displayBalance();
     }
 
-    @Step("Retrieve DB data for {method.name}.")
-    private void retrieveData(final Method method) {
+    @Test(dataProvider = "failingData")
+    public void shouldFailOnExceptionFromDataSupplier() {
         // not implemented
     }
 
-    @Step("Cleanup DB data for {method.name}.")
-    private void cleanUpData(final Method method) {
+    @Test(dataProvider = "skippingData")
+    public void shouldSkipOnExceptionFromDataSupplier() {
+        // not implemented
+    }
+
+    @Step("Retrieve DB data for {method}.")
+    private void retrieveData(final String method) {
+        // not implemented
+    }
+
+    @Step("Cleanup DB data for {method}.")
+    private void cleanUpData(final String method) {
         // not implemented
     }
 }

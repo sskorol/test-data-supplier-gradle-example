@@ -1,9 +1,9 @@
 package io.github.sskorol.pages;
 
+import io.github.sskorol.core.PageFactory;
 import io.github.sskorol.model.User;
 import io.qameta.allure.Step;
 
-import static io.github.sskorol.core.PageFactory.at;
 import static io.qameta.allure.Allure.addByteAttachmentAsync;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,8 +13,8 @@ public class LoginPage implements Page {
     @Step("Log into web site.")
     public HomePage loginWith(final User user) {
         return typeUsername(user.getUsername())
-                .typePassword(user.getPassword())
-                .clickLogOn();
+            .typePassword(user.getPassword())
+            .clickLogOn();
     }
 
     @Step("Type \"{username}\" into \"Username\" input.")
@@ -55,12 +55,14 @@ public class LoginPage implements Page {
 
     @Step("Click button \"Log On\"")
     public HomePage clickLogOn() {
-        return at(HomePage.class);
+        return PageFactory.at(HomePage.class);
     }
 
     @Step("Check if element is displayed.")
     private boolean isDisplayed() {
-        assertThat(false).as("Popup is displayed").isTrue();
+        assertThat(false)
+            .as("Popup is displayed")
+            .isTrue();
         return true;
     }
 }

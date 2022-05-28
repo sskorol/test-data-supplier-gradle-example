@@ -1,7 +1,7 @@
 package io.github.sskorol.testcases.common;
 
-import io.github.sskorol.core.DataSupplier;
 import io.github.sskorol.model.User;
+import io.github.sskorol.core.DataSupplier;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Factory;

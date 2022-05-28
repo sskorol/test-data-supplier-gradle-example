@@ -1,40 +1,50 @@
 plugins {
+    id 'java-library'
     id 'java'
-    id 'ru.vyarus.quality' version '2.4.0'
-    id 'io.qameta.allure' version '2.5'
-    id 'com.github.ben-manes.versions' version '0.17.0'
+    id "io.qameta.allure" version "2.9.6"
 }
 
 group 'io.github.sskorol'
 version '1.0.0'
 description 'Test Data Supplier example'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+ext {
+    aspectjVersion = '1.9.9.1'
+    lombokVersion = '1.18.24'
+}
 
 configurations {
     agent
 }
 
+java {
+    sourceCompatibility = 17
+    targetCompatibility = 17
+}
+
 repositories {
-    jcenter()
+    mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
-    agent "org.aspectj:aspectjweaver:1.8.13"
-    compile('org.assertj:assertj-core:3.9.1',
-            'io.github.sskorol:test-data-supplier:1.5.0',
-            'org.jooq:joor-java-8:0.9.7',
-            'io.qameta.allure:allure-testng:2.6.0',
-            'org.slf4j:slf4j-simple:1.8.0-beta1',
-            'org.projectlombok:lombok:1.16.20'
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
+    implementation('org.assertj:assertj-core:3.22.0',
+            'org.testng:testng:7.6.0',
+            'io.github.sskorol:test-data-supplier:2.1.0',
+            'io.qameta.allure:allure-testng:2.17.3',
+            'org.slf4j:slf4j-simple:2.0.0-alpha7',
+            "org.aspectj:aspectjrt:${aspectjVersion}",
+            "org.aspectj:aspectjweaver:${aspectjVersion}",
+            "org.projectlombok:lombok:${lombokVersion}"
     )
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+    testImplementation("org.projectlombok:lombok:$lombokVersion")
+    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
+    // compile('org.mapstruct:mapstruct-processor:1.4.2.Final')
 }
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
-}
 
 task copyConfig(type: Copy) {
     from 'src/test/resources/config'
@@ -46,11 +56,12 @@ task copyHistory(type: Copy) {
     into 'build/allure-results/history'
 }
 
-test.doFirst {
-    jvmArgs "-javaagent:${configurations.agent.singleFile}"
-}
-
 test {
+    testLogging {
+        events "skipped", "failed"
+        exceptionFormat "full"
+    }
+
     useTestNG() {
         listeners << 'io.github.sskorol.listeners.BaseListener'
         suites 'src/test/resources/suites/parent.xml'
@@ -66,5 +77,9 @@ test.dependsOn copyConfig, copyHistory
 
 allure {
     autoconfigure = true
-    version = '2.6.0'
+    version = '2.18.1'
+}
+
+wrapper {
+    gradleVersion = '7.4.2'
 }
