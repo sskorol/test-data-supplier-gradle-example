@@ -32,7 +32,7 @@ dependencies {
     implementation('org.assertj:assertj-core:3.22.0',
             'org.testng:testng:7.6.0',
             'io.github.sskorol:test-data-supplier:2.1.0',
-            'io.qameta.allure:allure-testng:2.17.3',
+            'io.qameta.allure:allure-testng:2.18.1',
             'org.slf4j:slf4j-simple:2.0.0-alpha7',
             "org.aspectj:aspectjrt:${aspectjVersion}",
             "org.aspectj:aspectjweaver:${aspectjVersion}",
@@ -41,7 +41,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
     testImplementation("org.projectlombok:lombok:$lombokVersion")
     testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    // compile('org.mapstruct:mapstruct-processor:1.4.2.Final')
 }
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
