@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'java'
-    id "io.qameta.allure" version "2.9.6"
+    id "io.qameta.allure" version "2.11.2"
 }
 
 group 'io.github.sskorol'
@@ -9,8 +9,8 @@ version '1.0.0'
 description 'Test Data Supplier example'
 
 ext {
-    aspectjVersion = '1.9.9.1'
-    lombokVersion = '1.18.24'
+    aspectjVersion = '1.9.19'
+    lombokVersion = '1.18.26'
 }
 
 configurations {
@@ -29,11 +29,11 @@ repositories {
 
 dependencies {
     agent "org.aspectj:aspectjweaver:${aspectjVersion}"
-    implementation('org.assertj:assertj-core:3.22.0',
-            'org.testng:testng:7.6.0',
-            'io.github.sskorol:test-data-supplier:2.1.0',
-            'io.qameta.allure:allure-testng:2.18.1',
-            'org.slf4j:slf4j-simple:2.0.0-alpha7',
+    implementation('org.assertj:assertj-core:3.24.2',
+            'org.testng:testng:7.7.1',
+            'io.github.sskorol:test-data-supplier:2.2.0',
+            'io.qameta.allure:allure-testng:2.21.0',
+            'org.slf4j:slf4j-simple:2.0.6',
             "org.aspectj:aspectjrt:${aspectjVersion}",
             "org.aspectj:aspectjweaver:${aspectjVersion}",
             "org.projectlombok:lombok:${lombokVersion}"
@@ -45,17 +45,24 @@ dependencies {
 
 [compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
 
-task copyConfig(type: Copy) {
+tasks.register('copyConfig', Copy) {
     from 'src/test/resources/config'
     into 'build/allure-results'
 }
 
-task copyHistory(type: Copy) {
+tasks.register('copyHistory', Copy) {
     from 'src/test/resources/history'
     into 'build/allure-results/history'
 }
 
 test {
+    doFirst {
+        jvmArgs(
+                "-javaagent:${configurations.agent.singleFile}",
+                '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+        )
+    }
+
     testLogging {
         events "skipped", "failed"
         exceptionFormat "full"
@@ -75,10 +82,9 @@ test {
 test.dependsOn copyConfig, copyHistory
 
 allure {
-    autoconfigure = true
-    version = '2.18.1'
+    version = '2.21.0'
 }
 
 wrapper {
-    gradleVersion = '7.4.2'
+    gradleVersion = '8.0.1'
 }
